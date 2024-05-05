@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/phaser@v3.80.1/dist/phaser.min.js"></script>
+    <script src="TitleScene.js"></script>
+    <script src="InputScene.js"></script>
+    <script src="RocketScene.js"></script>
+    <script src="GameOverScene.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.js"></script> -->
+    <title>Memory Mission Control</title>
+  </head>
+  <body>
+    <div id="gameDiv"></div>
+    <div class="InputForm" id="inputForm">
+      <h1>Input Form</h1>
+      <div class="explanation">
+        <p>
+          This is a quiz game to help the user practice putting questions and
+          answers together for any purpose, but particularly for exams. The
+          player must guide each question's rocket to the correct answer's
+          planet. Please fill this form out with all of your questions and
+          answers.
+        </p>
+      </div>
+      <div class="addButtons">
+        <label for="numQAs">I want this many question/answer pairings: </label>
+        <input
+          id="numQAs"
+          name="numQAs"
+          type="number"
+          min="1"
+          max="100"
+          value="1"
+        />
+      </div>
+      <div id="inputFormSet" class="inputFormSet">
+        <div class="QNA">
+          <input
+            type="text"
+            class="questionInput"
+            name="questionInput"
+            placeholder="Enter your quiz question here (200 char limit)"
+            style="font-size: 25px"
+            maxlength="200"
+          />
+          <input
+            type="text"
+            class="answerInput"
+            name="answerInput"
+            placeholder="Enter the answer here (30 char limit)"
+            style="font-size: 25px"
+            maxlength="30"
+          />
+        </div>
+      </div>
+      <div class="buttonDiv">
+        <img
+          id="submit"
+          src="images/Buttons/SubmitB.png"
+          alt="Submit your answers button"
+        />
+      </div>
+    </div>
+    <script type="text/javascript">
+      function f() {
+        currentIndex = 0;
+        score = 0;
+        totalScore = 0;
+      }
+    </script>
+    <script>
+      var questions;
+      var answers;
+
+      jQuery(function ($) {
+        let clone = $(".QNA").first().clone(true);
+        inputFormSet.textContent = "";
+        $("#inputFormSet").append(clone);
+
+        $("#numQAs").on("input", function () {
+          if ($("#numQAs").val() >= 1) {
+            let clone = $(".QNA").first().clone(true);
+            inputFormSet.textContent = "";
+            for (i = 0; i < $("#numQAs").val(); i++) {
+              $("#inputFormSet").append(clone);
+              clone = $(".QNA").first().clone(true);
+            }
+          }
+          // alert("changed");
+        });
+      });
+
+      var config = {
+        type: Phaser.AUTO,
+        width: 1400,
+        height: 700,
+        scene: [TitleScene, RocketScene, GameOverScene],
+        pixelArt: true,
+        parent: "gameDiv",
+        scale: {
+          autoCenter: Phaser.Scale.CENTER_BOTH,
+        },
+      };
+
+      var game = new Phaser.Game(config);
+
+      //fisher-yates shuffle algorithm - will be used to randomize the question/answer pairings
+      function shuffle(qArray, aArray) {
+        let currentIndex = qArray.length;
+
+        // While there remain elements to shuffle...
+        while (currentIndex != 0) {
+          // Pick a remaining element...
+          let randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+
+          // And swap it with the current element.
+          //indices stay the same between the questions and answers
+          temp1 = qArray[currentIndex].value;
+          temp2 = aArray[currentIndex].value;
+
+          qArray[currentIndex].value = qArray[randomIndex].value;
+          aArray[currentIndex].value = aArray[randomIndex].value;
+
+          qArray[randomIndex].value = temp1;
+          aArray[randomIndex].value = temp2;
+        }
+      }
+
+      document.getElementById("submit").onclick = function () {
+        questions = [];
+        questions = document.querySelectorAll(".questionInput");
+        answers = [];
+        answers = document.querySelectorAll(".answerInput");
+        shuffle(questions, answers);
+        // console.log(
+        //   "resulting questions: " +
+        //     questions[0].value +
+        //     questions[1].value +
+        //     questions[2].value +
+        //     questions[3].value
+        // );
+        // console.log(
+        //   "resulting answers: " +
+        //     answers[0].value +
+        //     answers[1].value +
+        //     answers[2].value +
+        //     answers[3].value
+        // );
+        // RocketScene.inGameSetQuestions = questions;
+        // RocketScene.inGameSetAnswers = answers;
+        f();
+
+        inputForm.style.display = "none";
+        game.scene.start("RocketScene");
+        gameDiv.style.display = "block";
+      };
+    </script>
+  </body>
+</html>
