@@ -222,15 +222,15 @@ class RocketScene extends Phaser.Scene {
     questionBox = this.add
       .text(700, 100, inGameSetQuestions[currentIndex], {
         //21 char limit
-        backgroundColor: "#FFFFFF",
-        color: "#001D40",
+        // backgroundColor: "#FFFFFF",
+        color: "#FFFFFF",
         fontFamily: "Courier",
         fontSize: "20px",
         padding: 5,
         align: "center",
-        wordWrap: { width: 500 },
-        maxLines: 3,
-        fixedWidth: 500,
+        wordWrap: { width: 700, useAdvancedWrap: true },
+        maxLines: 4,
+        // fixedWidth: 500,
       })
       .setOrigin(0.5, 0);
     questionBox.visible = true;
@@ -546,15 +546,15 @@ class RocketScene extends Phaser.Scene {
       let planetLabel = this.add
         .text(planets[index].x, 555, answerSet[iterationCount], {
           //29 char limit
-          backgroundColor: "#FFFFFF",
-          color: "#001D40",
+          // backgroundColor: "#FFFFFF",
+          color: "#FFFFFF",
           fontFamily: "Courier",
           fontSize: "20px",
           padding: 2,
           align: "center",
-          wordWrap: { width: 230 },
+          wordWrap: { width: 230, useAdvancedWrap: true },
           maxLines: 3,
-          fixedWidth: 230,
+          // fixedWidth: 230,
         })
         .setOrigin(0.5, 0);
       textSet.push(planetLabel);
